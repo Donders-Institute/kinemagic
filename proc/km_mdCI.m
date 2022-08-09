@@ -54,6 +54,10 @@ function CI = km_mdCI(pos,varargin)
 % Copyright (C) 2010-2011, Lennart Verhagen
 % L.Verhagen@donders.ru.nl
 % version 2011-09-01
+%
+% UPDATES:
+% version_201803 Rui Liu: return CI.mu and CI.pos; 
+%                         correct transmation matrix X and transformation of d
 %--------------------------------------------------------------------------
 
 
@@ -296,6 +300,8 @@ naxes = length(idx_ax);
 CI.eigvec	= eigvec;
 CI.eigval	= eigval;
 CI.k        = k;
+CI.mu       = mu;
+CI.pos      = pos;
 
 % return if minimal output is requested
 if strcmp(output,'minimal')
@@ -337,13 +343,13 @@ end
 d = bsxfun(@minus,pos,mu);
 % devide by scaling factor k
 d = d ./ k;
-% find scaling and rotation matrix: product of sqrt(eigval) and eigvec'
-X = (sqrt(eigval)*eigvec');
+% find scaling and rotation matrix: product of sqrt(eigval) and eigvec
+X = (sqrt(eigval)*eigvec);
 % if X-matrix is singular (eigvalue of zero), ignore spurious factor
 X = X(~all(X==0,2),:);
-% devide by transformation matrix (only if no NaNs present in X)
+% transform data into the standard elliposid space (only if no NaNs present in X)
 if ~any(isnan(X(:)))
-  d = d/X;
+    d=d*X;% d=(X^-1*d')';
 end
 % now we have rotated and scaled the data back to fit in a known ellipsoid
 % with the radii a=b=c=1 (a sphere) which follows x.^2 + y.^2 + z.^2 = 1
@@ -426,7 +432,7 @@ end
 %----------------------------------------
 function [eigvec,eigval] = calc_eigs(C)
 % compute eigen-vectors and -values
-if ~any(isnan(C(:)));
+if ~any(isnan(C(:)))
   [eigvec,eigval] = eig(C);
 else
   eigvec = nan(size(C));

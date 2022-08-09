@@ -1,11 +1,12 @@
-function [cfg,data] = km_cuttrials(cfg,data)
+function [cfg,data,deltrl] = km_cuttrials(cfg,data)
 %--------------------------------------------------------------------------
-%
-%
 % This file is part of the KineMagic toolbox
 % Copyright (C) 2010, Lennart Verhagen
 % L.Verhagen@donders.ru.nl
 % version 2010-01-01
+%
+% UPDATES:
+% version_201803 Rui Liu: return deleted trial matrix; return jerk
 %--------------------------------------------------------------------------
 
 % set configuration
@@ -72,6 +73,7 @@ newdata = initnewdata(data);
     
 % loop over runs
 newtrl = [];
+deltrl=[];
 for r = 1:length(data.time)
     % get time
     tim = data.time{r};
@@ -82,6 +84,7 @@ for r = 1:length(data.time)
     
     % restrict to trials within time range
     idx = trl(:,1) >= min(tim) & trl(:,2) <= max(tim);
+    deltrl(end+1:end+sum(~idx))=find(~idx);
     ttrl = trl(idx,:);
     trl = time2idx(ttrl(:,1:2),tim);
     trl(:,3) = time2idx(ttrl(:,3),tim);
@@ -234,7 +237,7 @@ tcfg        = [];
 tcfg.trl	= trl;
 tcfg.rold	= rold;
 tcfg.tinit	= tinit;
-tcfg.field  = {'pos','vel','acc','ori','orivel','oriacc'};
+tcfg.field  = {'pos','vel','acc','jerk','ori','orivel','oriacc'};
 newdata = dat2trl(tcfg,olddata,newdata);
 
 % grip level of data structure

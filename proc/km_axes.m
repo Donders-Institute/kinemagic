@@ -1,11 +1,12 @@
 function [cfg,data] = km_axes(cfg,data)
 %--------------------------------------------------------------------------
-%
-%
 % This file is part of the KineMagic toolbox
 % Copyright (C) 2010, Lennart Verhagen
 % L.Verhagen@donders.ru.nl
 % version 2010-01-01
+%
+% UPDATES:
+% version_201803 Rui Liu: rotate axes
 %--------------------------------------------------------------------------
 
 % set configuration
@@ -120,7 +121,7 @@ if any(cfg.axes.rotate)
 
     for r = 1:length(data.pos)
         for m = 1:data.marker
-            data.pos{r}(m,:,:) = data.pos{r}(m,:,:) * rot_matrix;
+            data.pos{r}(m,:,:) = reshape((squeeze(data.pos{r}(m,:,:))'* rot_matrix)',size(data.pos{r}(m,:,:)));
         end
     end
     

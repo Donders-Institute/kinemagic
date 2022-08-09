@@ -1,15 +1,16 @@
 function varargout = km_getmovidx(cfg,tseries)
 %--------------------------------------------------------------------------
-%
-%
 % This file is part of the KineMagic toolbox
 % Copyright (C) 2010, Lennart Verhagen
 % L.Verhagen@donders.ru.nl
 % version 2010-01-01
+%
+% UPDATES:
+% version_201803 Rui Liu: renaming variables for consistency
 %--------------------------------------------------------------------------
 
-movnr	= 1;
-marker	= {};
+movnr	= cfg.movnr;
+label	= {};
 axis	= {};
 
 if nargin > 1
@@ -31,10 +32,10 @@ if nargin > 1
     end
 end
 if isfield(cfg,'movnr'),	movnr	= cfg.movnr;	end
-if isfield(cfg,'marker'),	marker	= cfg.marker;	end
+if isfield(cfg,'label'),	label	= cfg.label;	end
 if isfield(cfg,'axis'),     axis	= cfg.axis;     end
 
-if ~iscell(marker), marker  = {marker}; end
+if ~iscell(label), label  = {label}; end
 if ~iscell(axis),   axis    = {axis};   end
 
-varargout = {movnr,marker,axis};
+varargout = {movnr,label,axis};

@@ -47,7 +47,7 @@ F=zeros(size(x));
 if rem(n,2) == 0
     s = x>0;
     k = 0;
-    for jj = 0:n/2-1;
+    for jj = 0:n/2-1
         k = k + (x(s)/2).^jj/factorial(jj);
     end
     F(s) = 1-exp(-x(s)/2).*k;

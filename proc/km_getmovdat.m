@@ -1,11 +1,12 @@
 function varargout= km_getmovdat(cfg,data,mov,tseries,reshapeflg)
 %--------------------------------------------------------------------------
-%
-%
 % This file is part of the KineMagic toolbox
 % Copyright (C) 2010, Lennart Verhagen
 % L.Verhagen@donders.ru.nl
 % version 2010-01-01
+%
+% UPDATES:
+% version_201803 Rui Liu: renaming variables for consistency
 %--------------------------------------------------------------------------
 % reshape the data output by default
 if nargin < 5
@@ -34,7 +35,7 @@ if ~isempty(regexp(tseries,'grip','once')) && isfield(data,'grip')
 end
 
 % get indeces
-[movnr marker axs] = km_getmovidx(cfg,tseries);
+[movnr label axs] = km_getmovidx(cfg,tseries);
 
 datalabel	= data.label;
 datatime	= data.time;
@@ -55,14 +56,14 @@ switch lower(tseries)
         tseries     = tseries(5:end);
 end
 
-% select marker (try to keep the order as specified)
-if isempty(marker), marker = datalabel; end;
-if length(marker) > 1 && ~all(ismember(marker,datalabel))
+% select label (try to keep the order as specified)
+if isempty(label), label = datalabel; end;
+if length(label) > 1 && ~all(ismember(label,datalabel))
     warning('KM:GetMovDat:MarkerSel','Marker order can not be guaranteed');
 end
-im = km_labelselection(marker,datalabel);
-if all(ismember(im,marker)) && all(ismember(marker,im))
-    [~,im] = ismember(marker,datalabel);
+im = km_labelselection(label,datalabel);
+if all(ismember(im,label)) && all(ismember(label,im))
+    [~,im] = ismember(label,datalabel);
     nm = length(im);
 else
     im = ismember(datalabel,im);
@@ -83,9 +84,9 @@ else
     na = sum(ia);
 end
 
-% check if markers and axis exist
+% check if labels and axis exist
 if nm < 1
-    error('the requested marker ''%s'' was not present in the data.',marker{1});
+    error('the requested label ''%s'' was not present in the data.',label{1});
 end
 if na < 1
     error('the requested axis ''%s'' was not present in the data.',axs{1});
